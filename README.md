@@ -22,3 +22,14 @@ The goal is to:
 - 🔹 Backup & Site Recovery Setup
 - 🔹 Automation: Start/Stop VM Script
 - 🔹 Cost analysis and optimization overview
+
+ ## 📐 Architecture Overview
+
+The Azure environment is built around a Virtual Network (VNet) divided into three subnets:
+
+- **Web Subnet:** Hosts web-facing applications and services.
+- **App Subnet:** Hosts internal application components and backend services.
+- **Database Subnet:** Hosts database servers with restricted access.
+
+This design follows best practices for security, traffic control, and scalability. Each subnet is protected with appropriate Network Security Groups (NSGs) to allow only necessary traffic between tiers.
+
