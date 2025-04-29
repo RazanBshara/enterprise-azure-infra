@@ -3,6 +3,8 @@
 
 A hands-on Azure project simulating a secure, scalable, and production-ready cloud environment. Built to demonstrate core skills of an Azure Administrator (AZ-104).
 
+![Enterprise Azure Infrastructure](enterprise-azure-infrastructure.png)
+
 ## 🎯 Project Purpose
 
 This project simulates a real-world cloud setup for a mid-sized enterprise, following best practices in Azure administration. It includes network design, identity management, monitoring, automation, and cost control — aligned with the responsibilities of an Azure Administrator.
