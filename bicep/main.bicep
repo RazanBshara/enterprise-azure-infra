@@ -100,8 +100,8 @@ resource firewallPublicIp 'Microsoft.Network/publicIPAddresses@2023-04-01' = {
 }
 
 // Azure Firewall
-resource azureFirewall 'Microsoft.Network/azureFirewalls@2023-04-01' = {
-  name: 'ent-firewall'
+resource azureFirewall 'Microsoft.Network/azureFirewalls@2022-01-01' = {
+  name: 'ent-fw'
   location: location
   properties: {
     sku: {
@@ -110,10 +110,10 @@ resource azureFirewall 'Microsoft.Network/azureFirewalls@2023-04-01' = {
     }
     ipConfigurations: [
       {
-        name: 'fw-ipconfig'
+        name: 'azureFirewallIpConfig'
         properties: {
           subnet: {
-            id: vnet.properties.subnets[0].id
+            id: resourceId('Microsoft.Network/virtualNetworks/subnets', vnet.name, 'AzureFirewallSubnet')
           }
           publicIPAddress: {
             id: firewallPublicIp.id
@@ -121,5 +121,52 @@ resource azureFirewall 'Microsoft.Network/azureFirewalls@2023-04-01' = {
         }
       }
     ]
+    networkRuleCollections: [
+      {
+        name: 'net-rule-collection'
+        properties: {
+          priority: 100
+          action: {
+            type: 'Allow'
+          }
+          rules: [
+            {
+              name: 'Allow-DNS'
+                sourceAddresses: ['10.0.1.0/24']
+                destinationAddresses: ['8.8.8.8']
+                destinationPorts: ['53']
+                protocols: ['UDP']
+
+            }
+          ]
+        }
+      }
+    ]
+    applicationRuleCollections: [
+      {
+        name: 'app-rule-collection'
+        properties: {
+          priority: 200
+          action: {
+            type: 'Allow'
+          }
+          rules: [
+            {
+              name: 'Allow-GitHub'
+                sourceAddresses: ['10.0.1.0/24']
+                protocols: [
+                  {
+                    protocolType: 'Https'
+                    port: 443
+                  }
+                ]
+                targetFqdns: ['*.github.com']
+              
+            }
+          ]
+        }
+      }
+    ]
   }
 }
+
